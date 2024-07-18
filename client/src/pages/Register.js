@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { RegisterUser } from "../calls/users";
 
 function Register() {
+  const navigate = useNavigate();
+
   const onFinish = async (values) => {
     console.log(values);
     try {
@@ -13,20 +15,17 @@ function Register() {
         navigate('/login');
       } else {
         message.error(response.message);
-        navigate('/login');
       }
     } catch (error) {
       message.error(error.message);
     }
   };
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <>
@@ -48,8 +47,7 @@ function Register() {
                   id="name"
                   type="text"
                   placeholder="Enter your name"
-                  rules={[{ required: true, message: "Email is required!" }]}
-                ></Input>
+                />
               </Form.Item>
               <Form.Item
                 label="Email"
@@ -62,7 +60,7 @@ function Register() {
                   id="email"
                   type="email"
                   placeholder="Enter your email"
-                ></Input>
+                />
               </Form.Item>
               <Form.Item
                 label="Password"
@@ -75,25 +73,15 @@ function Register() {
                   id="password"
                   type="password"
                   placeholder="Enter the password"
-                ></Input>
+                />
               </Form.Item>
 
-              <Form.Item>
-                <Button
-                  block
-                  type="primary"
-                  htmlType="submit"
-                  style={{ fontSize: "1rem", fontWeight: "600" }}
-                >
-                  Sign Up
-                </Button>
-              </Form.Item>
               <Form.Item
                 label="Register as a Partner"
                 htmlFor="role"
                 name="role"
                 className="d-block text-center"
-                initialValue={false}
+                initialValue={'user'}
                 rules={[{ required: true, message: "Please select an option!" }]}
               >
                 <div className="d-flex justify-content-start">
@@ -105,6 +93,17 @@ function Register() {
                     <Radio value={'user'}>No</Radio>
                   </Radio.Group>
                 </div>
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  block
+                  type="primary"
+                  htmlType="submit"
+                  style={{ fontSize: "1rem", fontWeight: "600" }}
+                >
+                  Sign Up
+                </Button>
               </Form.Item>
             </Form>
             <div>

@@ -23,7 +23,7 @@ async function emailSender(templateName, reciverEmail, creds, subject) {
             to: reciverEmail,
             from: AUTH_EMAIL,
             subject: subject,
-            text: `Hi ${creds.name}, this is your reset OTP: ${creds.otp}`,
+            text: `Hi ${creds.name}, your OTP is: ${creds.otp}`,
             html: replaceContent(content, creds),
         };
         const transporter = nodemailer.createTransport({
@@ -40,26 +40,4 @@ async function emailSender(templateName, reciverEmail, creds, subject) {
     }
 }
 
-async function sendMail(userEmail, subject, text) {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: AUTH_EMAIL,
-            pass: AUTH_PASSWORD
-        }
-    });
-    const mailoption = {
-        from: AUTH_EMAIL,
-        to: userEmail,
-        subject: subject,
-        text: text,
-    };
-    try {
-        await transporter.sendMail(mailoption);
-        console.log('Email sent');
-    } catch (error) {
-        console.log('Error sending email:', error);
-    }
-}
-
-module.exports = { emailSender, sendMail };
+module.exports = { emailSender };

@@ -1,32 +1,32 @@
-import React, { useEffect } from 'react'
-import { Button, Form, Input } from "antd";
+import React, { useEffect } from 'react';
+import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { ForgetPassword, LoginUser } from '../calls/users';
-import { message } from 'antd'
+import axios from 'axios';
 
 function Forget() {
     const onFinish = async (values) => {
         console.log(values);
         try {
-            const response = await ForgetPassword(values)
-            if (response.status === "success") {
-                message.success(response.message)
-                alert("OTP sent to your email")
-                window.location.href = '/reset'
-            }
-            else {
-                message.error(response.message)
+            const response = await axios.patch('http://localhost:8081/api/users/forgetpassword', values);
+            if (response.data.status === "success") {
+                message.success(response.data.message);
+                alert("OTP sent to your email");
+                window.location.href = '/reset';
+            } else {
+                message.error(response.data.message);
             }
         } catch (error) {
-            message.error(error.message)
+            message.error(error.message);
         }
-    }
-    const navigate = useNavigate()
+    };
+
+    const navigate = useNavigate();
     useEffect(() => {
         if (localStorage.getItem('token')) {
             navigate("/");
         }
-    }, [])
+    }, [navigate]);
+
     return (
         <>
             <header className="App-header">
@@ -36,7 +36,6 @@ function Forget() {
                     </section>
                     <section className="right-section">
                         <Form layout="vertical" onFinish={onFinish}>
-
                             <Form.Item
                                 label="Email"
                                 htmlFor="email"
@@ -50,8 +49,6 @@ function Forget() {
                                     placeholder="Enter your Email"
                                 ></Input>
                             </Form.Item>
-
-
                             <Form.Item className="d-block">
                                 <Button
                                     type="primary"
@@ -72,7 +69,7 @@ function Forget() {
                 </main>
             </header>
         </>
-    )
+    );
 }
 
-export default Forget
+export default Forget;

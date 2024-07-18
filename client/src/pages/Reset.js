@@ -1,30 +1,30 @@
-import React, { useEffect } from 'react'
-import { Button, Form, Input } from "antd";
+import React, { useEffect } from 'react';
+import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import {  ResetPassword } from '../calls/users';
-import { message } from 'antd'
+import axios from 'axios';
 
 function Reset() {
     const onFinish = async (values) => {
         try {
-            const response = await ResetPassword(values)
-            if (response.status === "success") {
-                message.success(response.message)
-                window.location.href = '/login'
-            }
-            else {
-                message.error(response.message)
+            const response = await axios.patch('http://localhost:8081/api/users/resetpassword', values);
+            if (response.data.status === "success") {
+                message.success(response.data.message);
+                window.location.href = '/login';
+            } else {
+                message.error(response.data.message);
             }
         } catch (error) {
-            message.error(error.message)
+            message.error(error.message);
         }
-    }
+    };
+
     const navigate = useNavigate();
     useEffect(() => {
         if (localStorage.getItem('token')) {
             navigate("/");
         }
-    }, [])
+    }, [navigate]);
+
     return (
         <>
             <header className="App-header">
@@ -34,7 +34,6 @@ function Reset() {
                     </section>
                     <section className="right-section">
                         <Form layout="vertical" onFinish={onFinish}>
-
                             <Form.Item
                                 label="OTP"
                                 htmlFor="otp"
@@ -48,7 +47,6 @@ function Reset() {
                                     placeholder="Enter your otp"
                                 ></Input>
                             </Form.Item>
-
                             <Form.Item
                                 label="Password"
                                 htmlFor="password"
@@ -60,7 +58,6 @@ function Reset() {
                                     id="password"
                                     type="password"
                                     placeholder="Enter your Password"
-
                                 ></Input>
                             </Form.Item>
                             <Form.Item className="d-block">
@@ -74,12 +71,11 @@ function Reset() {
                                 </Button>
                             </Form.Item>
                         </Form>
-
                     </section>
                 </main>
             </header>
         </>
-    )
+    );
 }
 
-export default Reset
+export default Reset;
